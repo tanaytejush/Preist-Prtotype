@@ -101,7 +101,7 @@ const Footer = ({ className = "" }: FooterProps) => {
             <address className="not-italic space-y-2 text-spiritual-brown/70 dark:text-gray-400">
               <p className="flex items-center">
                 <MapPin className="h-4 w-4 mr-2 flex-shrink-0" />
-                <span>1234 Spiritual Lane, Serenity, CA 90210</span>
+                <span>IIT Madras, Chennai</span>
               </p>
               <p className="flex items-center">
                 <Mail className="h-4 w-4 mr-2 flex-shrink-0" />
@@ -111,8 +111,8 @@ const Footer = ({ className = "" }: FooterProps) => {
               </p>
               <p className="flex items-center">
                 <Phone className="h-4 w-4 mr-2 flex-shrink-0" />
-                <a href="tel:+11234567890" className="hover:text-spiritual-gold dark:hover:text-white transition-colors">
-                  (123) 456-7890
+                <a href="tel:+919931069745" className="hover:text-spiritual-gold dark:hover:text-white transition-colors">
+                  +91 99310 69745
                 </a>
               </p>
             </address>
