@@ -13,6 +13,7 @@ import { z } from 'zod';
 import { Mail, MapPin, Phone, Send } from 'lucide-react';
 import { toast } from "@/hooks/use-toast";
 import { supabase } from '@/integrations/supabase/client';
+import { sendEmail } from '@/services/emailService';
 
 const contactSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters" }),
@@ -47,7 +48,18 @@ const Contact = () => {
         });
         
       if (error) throw error;
-      
+
+      // Send acknowledgment email
+      sendEmail({
+        type: 'contact_acknowledgment',
+        to: values.email,
+        data: {
+          name: values.name,
+          subject: values.subject,
+          message: values.message,
+        },
+      });
+
       toast({
         title: "Message Sent",
         description: "Thank you for contacting us. We will respond to your message shortly.",

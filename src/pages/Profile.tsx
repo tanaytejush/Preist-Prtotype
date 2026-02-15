@@ -25,9 +25,10 @@ import {
   TabsTrigger,
 } from '@/components/ui/tabs';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { Loader2, UserCircle, LogOut, Shield, RefreshCw, CalendarX } from 'lucide-react';
+import { Loader2, UserCircle, LogOut, Shield, RefreshCw } from 'lucide-react';
 import PriestApplicationSection from '@/components/profile/PriestApplicationSection';
-import { UserProfile } from '@/types/priest';
+import BookingsList from '@/components/profile/BookingsList';
+import { UserProfile, PriestBooking } from '@/types/priest';
 
 const Profile = () => {
   const { user, isLoading: authLoading, signOut } = useAuth();
@@ -70,6 +71,52 @@ const Profile = () => {
     staleTime: 5000, // Consider data stale after 5 seconds
     refetchOnWindowFocus: true, // Refresh data when window regains focus
     refetchInterval: 30000, // Refresh every 30 seconds
+  });
+
+  // Fetch user's priest bookings
+  const {
+    data: bookings,
+    isLoading: isBookingsLoading,
+    refetch: refetchBookings,
+  } = useQuery({
+    queryKey: ['priest-bookings', user?.id],
+    queryFn: async () => {
+      if (!user) return [];
+      const { data, error } = await supabase
+        .from('priest_bookings')
+        .select('*, priest_profiles(name, avatar_url)')
+        .eq('user_id', user.id)
+        .order('booking_date', { ascending: false });
+
+      if (error) throw error;
+      return (data || []) as (PriestBooking & { priest_profiles: { name: string; avatar_url: string } | null })[];
+    },
+    enabled: !!user,
+    staleTime: 10000,
+    refetchOnWindowFocus: true,
+  });
+
+  // Fetch user's service bookings
+  const {
+    data: serviceBookings,
+    isLoading: isServiceBookingsLoading,
+    refetch: refetchServiceBookings,
+  } = useQuery({
+    queryKey: ['service-bookings', user?.id],
+    queryFn: async () => {
+      if (!user) return [];
+      const { data, error } = await supabase
+        .from('service_bookings')
+        .select('*, services(title, icon, price)')
+        .eq('user_id', user.id)
+        .order('booking_date', { ascending: false });
+
+      if (error) throw error;
+      return data || [];
+    },
+    enabled: !!user,
+    staleTime: 10000,
+    refetchOnWindowFocus: true,
   });
 
   // Implement a manual refresh function with visual feedback
@@ -405,27 +452,72 @@ const Profile = () => {
                 </TabsContent>
                 
                 <TabsContent value="bookings">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>My Bookings</CardTitle>
-                      <CardDescription>
-                        View and manage your service bookings.
-                      </CardDescription>
-                    </CardHeader>
-                    
-                    <CardContent>
-                      <div className="text-center py-10">
-                        <CalendarX className="h-12 w-12 mx-auto text-muted-foreground/50 mb-4" />
-                        <h3 className="text-lg font-medium text-foreground mb-2">No bookings yet</h3>
-                        <p className="text-muted-foreground mb-6">
-                          You haven't booked any services yet. Browse our offerings and book your first spiritual service.
-                        </p>
-                        <Button variant="spiritual" onClick={() => navigate('/services')}>
-                          Browse Services
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
+                  <div className="space-y-6">
+                    {/* Priest Bookings */}
+                    <div>
+                      <h3 className="text-lg font-semibold text-spiritual-brown dark:text-spiritual-cream mb-3">Priest Bookings</h3>
+                      {isBookingsLoading ? (
+                        <Card>
+                          <CardContent className="p-8 text-center">
+                            <Loader2 className="h-8 w-8 animate-spin mx-auto text-spiritual-gold" />
+                            <p className="mt-2 text-muted-foreground">Loading bookings...</p>
+                          </CardContent>
+                        </Card>
+                      ) : (
+                        <BookingsList bookings={(bookings || []) as PriestBooking[]} />
+                      )}
+                    </div>
+
+                    {/* Service Bookings */}
+                    <div>
+                      <h3 className="text-lg font-semibold text-spiritual-brown dark:text-spiritual-cream mb-3">Service Bookings</h3>
+                      {isServiceBookingsLoading ? (
+                        <Card>
+                          <CardContent className="p-8 text-center">
+                            <Loader2 className="h-8 w-8 animate-spin mx-auto text-spiritual-gold" />
+                            <p className="mt-2 text-muted-foreground">Loading bookings...</p>
+                          </CardContent>
+                        </Card>
+                      ) : serviceBookings && serviceBookings.length > 0 ? (
+                        <div className="space-y-4">
+                          {serviceBookings.map((booking: any) => (
+                            <Card key={booking.id}>
+                              <CardContent className="p-4">
+                                <div className="flex items-center justify-between">
+                                  <div>
+                                    <h4 className="font-medium">{booking.services?.title || 'Service Booking'}</h4>
+                                    <p className="text-sm text-muted-foreground">
+                                      {new Date(booking.booking_date).toLocaleDateString()}
+                                    </p>
+                                    {booking.notes && (
+                                      <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">{booking.notes}</p>
+                                    )}
+                                  </div>
+                                  <Badge variant="outline" className={
+                                    booking.status === 'confirmed' ? 'bg-blue-50 text-blue-700 border-blue-200' :
+                                    booking.status === 'completed' ? 'bg-green-50 text-green-700 border-green-200' :
+                                    booking.status === 'cancelled' ? 'bg-red-50 text-red-700 border-red-200' :
+                                    'bg-amber-50 text-amber-700 border-amber-200'
+                                  }>
+                                    {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
+                                  </Badge>
+                                </div>
+                              </CardContent>
+                            </Card>
+                          ))}
+                        </div>
+                      ) : (
+                        <Card>
+                          <CardContent className="p-6 text-center">
+                            <p className="text-muted-foreground mb-4">No service bookings yet.</p>
+                            <Button variant="spiritual" size="sm" onClick={() => navigate('/services')}>
+                              Browse Services
+                            </Button>
+                          </CardContent>
+                        </Card>
+                      )}
+                    </div>
+                  </div>
                 </TabsContent>
               </Tabs>
             </div>

@@ -19,6 +19,8 @@ import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { PriestProfile } from '@/types/priest';
 import { useRazorpay } from '@/hooks/payment/useRazorpay';
+import PriestReviews from '@/components/features/PriestReviews';
+import { sendEmail } from '@/services/emailService';
 
 interface BookingDetails {
   date: Date | undefined;
@@ -164,9 +166,28 @@ const BookPriest = () => {
       return newBooking;
     };
 
+    const sendBookingEmail = () => {
+      if (user?.email) {
+        sendEmail({
+          type: 'booking_confirmation',
+          to: user.email,
+          data: {
+            user_name: user.user_metadata?.first_name || 'Devotee',
+            priest_name: priest?.name,
+            purpose: booking.purpose,
+            booking_date: booking.date ? format(booking.date, 'PPP') + ' at ' + booking.time : '',
+            address: booking.address,
+            price: priest?.base_price || 0,
+            app_url: window.location.origin,
+          },
+        });
+      }
+    };
+
     if (price <= 0) {
       try {
         await createBooking();
+        sendBookingEmail();
         toast({ title: "Booking Submitted", description: "Your booking has been submitted.", duration: 6000 });
         navigate('/profile?tab=bookings');
       } catch (error: any) {
@@ -188,6 +209,7 @@ const BookPriest = () => {
       onSuccess: async (paymentId) => {
         try {
           await createBooking();
+          sendBookingEmail();
           toast({
             title: "Booking Confirmed",
             description: `Payment received (${paymentId}). Your booking with ${priest?.name} has been confirmed.`,
@@ -292,8 +314,20 @@ const BookPriest = () => {
                   </div>
                 </CardContent>
               </Card>
+
+              {/* Reviews Section */}
+              {priest?.id && (
+                <Card className="bg-white border-spiritual-gold/20 mt-4">
+                  <CardHeader>
+                    <CardTitle className="text-spiritual-brown text-base">Reviews</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <PriestReviews priestId={priest.id} />
+                  </CardContent>
+                </Card>
+              )}
             </div>
-            
+
             <div className="md:col-span-2">
               <Card className="bg-white border-spiritual-gold/20">
                 <CardHeader>

@@ -1,11 +1,15 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Calendar, MapPin, Eye, Navigation } from 'lucide-react';
+import { Calendar, MapPin, Eye, Navigation, Star } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { PriestBooking } from '@/types/priest';
+import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
+import ReviewForm from '@/components/features/ReviewForm';
 
 interface BookingsListProps {
   bookings: PriestBooking[];
@@ -13,6 +17,24 @@ interface BookingsListProps {
 
 const BookingsList: React.FC<BookingsListProps> = ({ bookings }) => {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const [reviewingBookingId, setReviewingBookingId] = useState<string | null>(null);
+
+  // Fetch existing reviews for the user's bookings
+  const { data: existingReviews, refetch: refetchReviews } = useQuery({
+    queryKey: ['user-reviews', user?.id],
+    queryFn: async () => {
+      if (!user) return [];
+      const { data } = await supabase
+        .from('reviews')
+        .select('booking_id')
+        .eq('user_id', user.id);
+      return data?.map((r: any) => r.booking_id) || [];
+    },
+    enabled: !!user,
+  });
+
+  const hasReview = (bookingId: string) => existingReviews?.includes(bookingId);
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -109,20 +131,41 @@ const BookingsList: React.FC<BookingsListProps> = ({ bookings }) => {
                       Track Booking
                     </Button>
                   )}
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => {
-                      // View details functionality can be added here
-                      console.log('View booking details:', booking.id);
-                    }}
-                  >
-                    <Eye className="h-4 w-4 mr-1" />
-                    Details
-                  </Button>
+                  {booking.status === 'completed' && booking.id && !hasReview(booking.id) && (
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="border-amber-300 text-amber-700 hover:bg-amber-50"
+                      onClick={() => setReviewingBookingId(
+                        reviewingBookingId === booking.id ? null : booking.id!
+                      )}
+                    >
+                      <Star className="h-4 w-4 mr-1" />
+                      Leave Review
+                    </Button>
+                  )}
+                  {booking.status === 'completed' && booking.id && hasReview(booking.id) && (
+                    <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                      <Star className="h-3 w-3 mr-1 fill-current" />
+                      Reviewed
+                    </Badge>
+                  )}
                 </div>
               </div>
             </div>
+            {reviewingBookingId === booking.id && booking.id && user && (
+              <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                <ReviewForm
+                  priestId={booking.priest_id}
+                  bookingId={booking.id}
+                  userId={user.id}
+                  onReviewSubmitted={() => {
+                    setReviewingBookingId(null);
+                    refetchReviews();
+                  }}
+                />
+              </div>
+            )}
           </CardContent>
         </Card>
       ))}

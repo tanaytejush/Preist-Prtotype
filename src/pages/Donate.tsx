@@ -13,6 +13,7 @@ import { z } from 'zod';
 import { Gift, Heart, TrendingUp, Loader2 } from 'lucide-react';
 import { toast } from "@/hooks/use-toast";
 import { useRazorpay } from '@/hooks/payment/useRazorpay';
+import { sendEmail } from '@/services/emailService';
 
 const donationSchema = z.object({
   amount: z.string().regex(/^\d+(\.\d{1,2})?$/, { message: "Please enter a valid amount" }),
@@ -76,6 +77,19 @@ const DonationForm = () => {
         contact: values.phone,
       },
       onSuccess: (paymentId) => {
+        // Send donation receipt email
+        sendEmail({
+          type: 'donation_receipt',
+          to: values.email,
+          data: {
+            donor_name: values.name,
+            amount: values.amount,
+            payment_id: paymentId,
+            message: values.message,
+            date: new Date().toLocaleDateString(),
+          },
+        });
+
         toast({
           title: "धन्यवाद! Thank you for your donation!",
           description: `Your generous gift of ₹${values.amount} has been received. Transaction ID: ${paymentId}`,
