@@ -1,0 +1,336 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 33 43% 97%;
+    --foreground: 30 10% 20%;
+    --card: 0 0% 100%;
+    --card-foreground: 30 10% 20%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 30 10% 20%;
+    --primary: 34 91% 50%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 34 40% 95%;
+    --secondary-foreground: 30 10% 20%;
+    --muted: 30 10% 95%;
+    --muted-foreground: 30 10% 50%;
+    --accent: 15 75% 50%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 30 10% 90%;
+    --input: 30 10% 90%;
+    --ring: 34 91% 50%;
+    --radius: 0.75rem;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 30 10% 20%;
+    --sidebar-border: 30 10% 90%;
+    --sidebar-primary: 34 91% 50%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 30 10% 95%;
+    --sidebar-accent-foreground: 30 10% 20%;
+    --sidebar-ring: 34 91% 50%;
+  }
+
+  .dark {
+    --background: 28 12% 12%;
+    --foreground: 30 10% 95%;
+    --card: 28 12% 15%;
+    --card-foreground: 30 10% 95%;
+    --popover: 28 12% 15%;
+    --popover-foreground: 30 10% 95%;
+    --primary: 34 91% 50%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 28 10% 20%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 28 10% 20%;
+    --muted-foreground: 30 10% 70%;
+    --accent: 15 75% 50%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 28 10% 25%;
+    --input: 28 10% 25%;
+    --ring: 34 91% 50%;
+    --sidebar-background: 28 12% 15%;
+    --sidebar-foreground: 30 10% 95%;
+    --sidebar-border: 28 10% 25%;
+    --sidebar-primary: 34 91% 50%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 28 10% 20%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-ring: 34 91% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-devnagari;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  
+  /* Add Poppins and Playfair Display fonts */
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
+
+  /* Improved scrollbar */
+  ::-webkit-scrollbar {
+    @apply w-1.5;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-spiritual-saffron/50 rounded-full transition-colors duration-200;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-spiritual-saffron;
+  }
+}
+
+@layer components {
+  /* Card with Indian motif border */
+  .indian-card {
+    @apply bg-white/90 dark:bg-gray-800/80 backdrop-blur-md rounded-xl shadow-sm 
+           hover:shadow-md transition-all duration-300 border-2 border-spiritual-saffron/30 
+           dark:border-spiritual-saffron/20 overflow-hidden;
+    background-image: radial-gradient(circle at 100% 100%, transparent 15px, white 15px),
+                      radial-gradient(circle at 0 100%, transparent 15px, white 15px),
+                      radial-gradient(circle at 100% 0, transparent 15px, white 15px),
+                      radial-gradient(circle at 0 0, transparent 15px, white 15px);
+    background-position: bottom right, bottom left, top right, top left;
+    background-size: 50% 50%;
+    background-repeat: no-repeat;
+  }
+  
+  /* Dark mode override for indian-card */
+  .dark .indian-card {
+    background-image: radial-gradient(circle at 100% 100%, transparent 15px, hsl(var(--card)) 15px),
+                      radial-gradient(circle at 0 100%, transparent 15px, hsl(var(--card)) 15px),
+                      radial-gradient(circle at 100% 0, transparent 15px, hsl(var(--card)) 15px),
+                      radial-gradient(circle at 0 0, transparent 15px, hsl(var(--card)) 15px);
+  }
+
+  /* Basic elements with Indian styling */
+  .indian-link {
+    @apply text-spiritual-peacock hover:text-spiritual-saffron transition-colors duration-300 
+           font-medium relative inline-block after:content-[''] after:absolute after:w-0 
+           after:h-0.5 after:bg-spiritual-turmeric after:left-0 after:-bottom-0.5 
+           hover:after:w-full after:transition-all after:duration-300;
+  }
+
+  .indian-button {
+    @apply bg-spiritual-saffron text-white px-6 py-2.5 rounded-md shadow-sm 
+           hover:shadow-md hover:bg-spiritual-saffron/90 transition-all duration-300 
+           text-center font-medium border border-spiritual-saffron/30 relative 
+           overflow-hidden before:absolute before:inset-0 before:bg-white/20 
+           before:translate-x-full hover:before:translate-x-0 before:transition 
+           before:duration-300 before:ease-in-out;
+  }
+
+  /* Rangoli-inspired spinner */
+  .rangoli-spinner {
+    @apply relative h-16 w-16 rounded-full;
+    background: conic-gradient(
+      from 0deg, 
+      #FF9933, 
+      #FF9933 30%, 
+      #138808 30%, 
+      #138808 60%,
+      #FFFFFF 60%, 
+      #FFFFFF 90%,
+      #FF9933 90%
+    );
+    animation: chakra-spin 1.5s linear infinite;
+    filter: drop-shadow(0 0 10px rgba(255, 153, 51, 0.3));
+  }
+
+  .rangoli-spinner::before {
+    content: '';
+    @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 
+           h-12 w-12 bg-white dark:bg-gray-800 rounded-full transition-colors duration-200;
+  }
+
+  .rangoli-spinner::after {
+    content: '';
+    @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 
+           h-10 w-10 border-2 border-dashed border-spiritual-saffron 
+           dark:border-spiritual-turmeric rounded-full;
+    animation: chakra-spin 3s linear infinite reverse;
+  }
+
+  /* Mandala decoration for sections */
+  .mandala-bg {
+    @apply relative overflow-hidden;
+  }
+
+  .mandala-bg::before {
+    content: '';
+    @apply absolute top-0 right-0 w-64 h-64 bg-no-repeat bg-contain opacity-10;
+    background-image: url('https://images.unsplash.com/photo-1579546929518-9e396f3cc809?ixlib=rb-4.0.3');
+  }
+
+  /* 3D effect for cards - fixed implementation */
+  .card-3d {
+    @apply transition-all duration-300 perspective-1000 transform-style-3d cursor-pointer;
+  }
+  
+  .card-3d:hover {
+    transform: translateY(-5px) rotateX(5deg) rotateY(5deg);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+  }
+
+  /* Glass effect for Indian aesthetics */
+  .indian-glass {
+    @apply bg-white/30 dark:bg-gray-800/30 backdrop-blur-md border border-white/40 
+           dark:border-gray-700/30 rounded-xl shadow-sm;
+  }
+  
+  /* Enhanced card styles */
+  .featured-card {
+    @apply indian-card relative overflow-hidden border-spiritual-gold/50;
+    background: linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.4) 100%);
+  }
+  
+  .dark .featured-card {
+    background: linear-gradient(135deg, hsl(var(--card) / 0.8) 0%, hsl(var(--card) / 0.4) 100%);
+  }
+  
+  /* Animated decorative elements */
+  .om-symbol {
+    @apply text-4xl text-spiritual-saffron absolute -z-10;
+    animation: float 6s ease-in-out infinite;
+  }
+
+  /* Improved button styles */
+  .accent-button {
+    @apply bg-spiritual-lotus text-white px-6 py-2.5 rounded-md shadow-sm 
+           hover:shadow-md hover:bg-spiritual-lotus/90 transition-all duration-300 
+           text-center font-medium border border-spiritual-lotus/30;
+  }
+
+  /* Spiritual card for service/content cards */
+  .spiritual-card {
+    @apply bg-white/90 dark:bg-gray-800/80 backdrop-blur-md rounded-xl shadow-sm
+           hover:shadow-md transition-all duration-300 border border-spiritual-gold/20 p-6;
+  }
+}
+
+/* Animation utilities */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scale-in {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* Define the chakra-spin animation used by the rangoli-spinner */
+@keyframes chakra-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Pulse glow animation */
+@keyframes pulse-glow {
+  0%, 100% { filter: drop-shadow(0 0 5px rgba(255, 153, 51, 0.5)); }
+  50% { filter: drop-shadow(0 0 15px rgba(255, 153, 51, 0.8)); }
+}
+
+/* Pulse animation for heart icons */
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out forwards;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.3s ease-out forwards;
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+.animate-pulse {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* Gradient text with Indian colors */
+.indian-gradient-text {
+  @apply bg-gradient-to-r from-spiritual-saffron to-spiritual-lotus bg-clip-text text-transparent;
+}
+
+/* Mehndi-inspired decorative divider */
+.mehndi-divider {
+  @apply relative h-px w-full my-8 bg-spiritual-saffron/30;
+}
+
+.mehndi-divider::before {
+  content: "❈";
+  @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 
+         text-spiritual-saffron bg-background dark:bg-background px-4;
+}
+
+/* Enhanced typography */
+.sacred-heading {
+  @apply font-sanskrit text-foreground leading-tight;
+  text-shadow: 0 2px 10px rgba(255, 153, 51, 0.2);
+}
+
+/* Responsive improvements */
+@media (max-width: 640px) {
+  .indian-card {
+    @apply p-4;
+  }
+  
+  .mehndi-divider::before {
+    @apply text-sm;
+  }
+}
+
+/* Additional animations for UI elements */
+@keyframes spin-in-180 {
+  from { transform: rotate(0deg); opacity: 0; }
+  to { transform: rotate(180deg); opacity: 1; }
+}
+
+@keyframes spin-out-180 {
+  from { transform: rotate(0deg); opacity: 1; }
+  to { transform: rotate(180deg); opacity: 0; }
+}
+
+/* New gradient text animation */
+.gradient-text-animate {
+  background-size: 200% 200%;
+  animation: gradient-shift 5s ease infinite;
+  @apply bg-gradient-to-r from-spiritual-saffron via-spiritual-gold to-spiritual-brown bg-clip-text text-transparent;
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Dark mode transition improvements */
+.dark .transition-theme,
+.transition-theme {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
