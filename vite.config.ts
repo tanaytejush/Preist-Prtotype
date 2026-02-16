@@ -45,6 +45,8 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ["**/*.{js,css,html,ico,png,svg,jpg,webp}"],
+        navigateFallback: "index.html",
+        navigateFallbackDenylist: [/^\/api\//, /^\/auth\/callback/],
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/images\.unsplash\.com\/.*/i,
@@ -59,10 +61,14 @@ export default defineConfig({
             handler: "NetworkFirst",
             options: {
               cacheName: "supabase-api",
+              networkTimeoutSeconds: 10,
               expiration: { maxEntries: 100, maxAgeSeconds: 60 * 5 },
             },
           },
         ],
+        cleanupOutdatedCaches: true,
+        skipWaiting: true,
+        clientsClaim: true,
       },
     }),
   ],
