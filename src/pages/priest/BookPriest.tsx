@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/common/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
@@ -19,8 +19,8 @@ import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { PriestProfile } from '@/types/priest';
 import { useRazorpay } from '@/hooks/payment/useRazorpay';
-import PriestReviews from '@/components/features/PriestReviews';
-import { sendEmail } from '@/services/emailService';
+import PriestReviews from '@/components/reviews/PriestReviews';
+import { sendEmail } from '@/services/email/emailService';
 
 interface BookingDetails {
   date: Date | undefined;

@@ -18,7 +18,7 @@ import {
   RotateCw
 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/common/use-toast';
 import { 
   Dialog,
   DialogContent,
@@ -34,7 +34,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ContactAPI, ContactSubmission } from '@/api/supabaseUtils';
+import { ContactAPI, ContactSubmission } from '@/services/supabase/supabaseUtils';
 import { format } from 'date-fns';
 
 const ContactTab = () => {

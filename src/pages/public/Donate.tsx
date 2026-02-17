@@ -11,9 +11,9 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Gift, Heart, TrendingUp, Loader2 } from 'lucide-react';
-import { toast } from "@/hooks/use-toast";
+import { toast } from "@/hooks/common/use-toast";
 import { useRazorpay } from '@/hooks/payment/useRazorpay';
-import { sendEmail } from '@/services/emailService';
+import { sendEmail } from '@/services/email/emailService';
 
 const donationSchema = z.object({
   amount: z.string().regex(/^\d+(\.\d{1,2})?$/, { message: "Please enter a valid amount" }),

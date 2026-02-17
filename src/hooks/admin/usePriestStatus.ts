@@ -1,6 +1,6 @@
 
 import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/common/use-toast';
 import { ProcessingState, ProfilesState } from './types';
 import { usePriestProfile } from './usePriestProfile';
 import { useQueryClient } from '@tanstack/react-query';

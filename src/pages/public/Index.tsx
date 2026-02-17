@@ -1,13 +1,13 @@
 
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Navbar from '../components/layout/Navbar';
-import Footer from '../components/layout/Footer';
-import Hero from '../components/home/Hero';
-import DailyInspiration from '../components/home/DailyInspiration';
-import ServicesPreview from '../components/home/ServicesPreview';
-import Testimonials from '../components/home/Testimonials';
-import DonatePreview from '../components/home/DonatePreview';
+import Navbar from '../../components/layout/Navbar';
+import Footer from '../../components/layout/Footer';
+import Hero from '../../components/home/Hero';
+import DailyInspiration from '../../components/home/DailyInspiration';
+import ServicesPreview from '../../components/home/ServicesPreview';
+import Testimonials from '../../components/home/Testimonials';
+import DonatePreview from '../../components/home/DonatePreview';
 import { Button } from '@/components/ui/button';
 import { Users } from 'lucide-react';
 

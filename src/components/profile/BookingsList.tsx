@@ -9,7 +9,7 @@ import { useQuery } from '@tanstack/react-query';
 import { PriestBooking } from '@/types/priest';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
-import ReviewForm from '@/components/features/ReviewForm';
+import ReviewForm from '@/components/reviews/ReviewForm';
 
 interface BookingsListProps {
   bookings: PriestBooking[];

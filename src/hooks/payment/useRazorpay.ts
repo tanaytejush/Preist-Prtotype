@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
 interface PaymentOptions {
   amount: number;
   type: 'donation' | 'service_booking' | 'priest_booking';
@@ -8,6 +11,30 @@ interface PaymentOptions {
   prefill?: { name?: string; email?: string; contact?: string };
   onSuccess: (paymentId: string) => void;
   onFailure: (error: string) => void;
+}
+
+async function invokeEdgeFunction(fnName: string, body: Record<string, any>) {
+  // Use the user's JWT if logged in, otherwise fall back to anon key
+  const { data: sessionData } = await supabase.auth.getSession();
+  const token = sessionData?.session?.access_token || SUPABASE_ANON_KEY;
+
+  const res = await fetch(`${SUPABASE_URL}/functions/v1/${fnName}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+      'apikey': SUPABASE_ANON_KEY,
+    },
+    body: JSON.stringify(body),
+  });
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    throw new Error(data?.error || `Edge Function error (${res.status})`);
+  }
+
+  return data;
 }
 
 export function useRazorpay() {
@@ -25,24 +52,15 @@ export function useRazorpay() {
 
     try {
       // 1. Create order via Edge Function
-      const { data: sessionData } = await supabase.auth.getSession();
-      const token = sessionData?.session?.access_token;
-
-      if (!token) {
-        onFailure('You must be signed in to make a payment.');
-        setIsProcessing(false);
-        return;
-      }
-
-      const response = await supabase.functions.invoke('create-razorpay-order', {
-        body: { amount, currency: 'INR', type, metadata },
+      const orderData = await invokeEdgeFunction('create-razorpay-order', {
+        amount, currency: 'INR', type, metadata,
       });
 
-      if (response.error || !response.data?.order_id) {
-        throw new Error(response.error?.message || 'Failed to create payment order');
+      if (!orderData.order_id) {
+        throw new Error(orderData.error || 'Failed to create payment order');
       }
 
-      const { order_id, amount: amountInPaise, currency } = response.data;
+      const { order_id, amount: amountInPaise, currency } = orderData;
 
       // 2. Open Razorpay Checkout
       const razorpayOptions: RazorpayOptions = {
@@ -57,16 +75,14 @@ export function useRazorpay() {
         handler: async (paymentResponse: RazorpayResponse) => {
           try {
             // 3. Verify payment via Edge Function
-            const verifyResponse = await supabase.functions.invoke('verify-razorpay-payment', {
-              body: {
-                razorpay_order_id: paymentResponse.razorpay_order_id,
-                razorpay_payment_id: paymentResponse.razorpay_payment_id,
-                razorpay_signature: paymentResponse.razorpay_signature,
-              },
+            const verifyData = await invokeEdgeFunction('verify-razorpay-payment', {
+              razorpay_order_id: paymentResponse.razorpay_order_id,
+              razorpay_payment_id: paymentResponse.razorpay_payment_id,
+              razorpay_signature: paymentResponse.razorpay_signature,
             });
 
-            if (verifyResponse.error || !verifyResponse.data?.success) {
-              throw new Error(verifyResponse.error?.message || 'Payment verification failed');
+            if (!verifyData.success) {
+              throw new Error(verifyData.error || 'Payment verification failed');
             }
 
             onSuccess(paymentResponse.razorpay_payment_id);

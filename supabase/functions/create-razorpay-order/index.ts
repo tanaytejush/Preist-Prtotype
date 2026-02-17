@@ -13,28 +13,31 @@ serve(async (req) => {
   }
 
   try {
-    const supabaseClient = createClient(
-      Deno.env.get("SUPABASE_URL") ?? "",
-      Deno.env.get("SUPABASE_ANON_KEY") ?? "",
-      {
-        global: {
-          headers: { Authorization: req.headers.get("Authorization")! },
-        },
-      }
-    );
+    const { amount, currency = "INR", type, metadata = {} } = await req.json();
 
-    const {
-      data: { user },
-    } = await supabaseClient.auth.getUser();
+    // Auth is optional for donations, required for bookings
+    let user = null;
+    const authHeader = req.headers.get("Authorization");
+    if (authHeader) {
+      const supabaseClient = createClient(
+        Deno.env.get("SUPABASE_URL") ?? "",
+        Deno.env.get("SUPABASE_ANON_KEY") ?? "",
+        {
+          global: {
+            headers: { Authorization: authHeader },
+          },
+        }
+      );
+      const { data } = await supabaseClient.auth.getUser();
+      user = data?.user ?? null;
+    }
 
-    if (!user) {
+    if (!user && type !== "donation") {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
-
-    const { amount, currency = "INR", type, metadata = {} } = await req.json();
 
     if (!amount || !type) {
       return new Response(
@@ -74,7 +77,7 @@ serve(async (req) => {
         body: JSON.stringify({
           amount: amountInPaise,
           currency,
-          notes: { type, user_id: user.id, ...metadata },
+          notes: { type, ...(user ? { user_id: user.id } : {}), ...metadata },
         }),
       }
     );
@@ -102,7 +105,7 @@ serve(async (req) => {
     const { error: insertError } = await supabaseAdmin
       .from("payments")
       .insert({
-        user_id: user.id,
+        ...(user ? { user_id: user.id } : {}),
         razorpay_order_id: razorpayOrder.id,
         amount: amountInPaise,
         currency,

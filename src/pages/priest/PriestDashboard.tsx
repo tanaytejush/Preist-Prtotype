@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/common/use-toast';
 import PriestLayout from '@/components/priest/PriestLayout';
 import PriestDashboardContent from '@/components/priest/PriestDashboardContent';
 import PriestDashboardLoading from '@/components/priest/PriestDashboardLoading';

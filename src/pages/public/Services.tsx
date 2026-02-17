@@ -1,12 +1,12 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Navbar from '../components/layout/Navbar';
-import Footer from '../components/layout/Footer';
+import Navbar from '../../components/layout/Navbar';
+import Footer from '../../components/layout/Footer';
 import { Link } from 'react-router-dom';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/common/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
-import { ServicesAPI, BookingsAPI, Service } from '@/api/supabaseUtils';
+import { ServicesAPI, BookingsAPI, Service } from '@/services/supabase/supabaseUtils';
 import {
   Dialog,
   DialogContent,

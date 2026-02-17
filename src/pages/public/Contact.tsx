@@ -11,9 +11,9 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Mail, MapPin, Phone, Send } from 'lucide-react';
-import { toast } from "@/hooks/use-toast";
+import { toast } from "@/hooks/common/use-toast";
 import { supabase } from '@/integrations/supabase/client';
-import { sendEmail } from '@/services/emailService';
+import { sendEmail } from '@/services/email/emailService';
 
 const contactSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters" }),

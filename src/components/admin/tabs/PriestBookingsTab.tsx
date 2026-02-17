@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Search, RefreshCw, Calendar, UserCheck, Eye } from 'lucide-react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/common/use-toast';
 import {
   Table,
   TableBody,

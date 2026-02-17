@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, Sparkles, Home, Flower, CloudSun } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
-import { ServicesAPI, Service } from '@/api/supabaseUtils';
+import { ServicesAPI, Service } from '@/services/supabase/supabaseUtils';
 import { Button } from '@/components/ui/button';
 
 const iconMap: Record<string, any> = {

@@ -2,8 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { useToast } from '@/hooks/use-toast';
-import { BookingsAPI, ServicesAPI } from '@/api/supabaseUtils';
+import { useToast } from '@/hooks/common/use-toast';
+import { BookingsAPI, ServicesAPI } from '@/services/supabase/supabaseUtils';
 import { Calendar, Clock, User, FileText, BadgeCheck, X, Loader2 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { 

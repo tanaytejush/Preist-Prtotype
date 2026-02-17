@@ -7,9 +7,9 @@ import { Button } from '@/components/ui/button';
 import { Calendar, Clock, MapPin, IndianRupee } from 'lucide-react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/common/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
-import { EventsAPI, RegistrationsAPI, Event } from '@/api/supabaseUtils';
+import { EventsAPI, RegistrationsAPI, Event } from '@/services/supabase/supabaseUtils';
 
 // Indian Rupee formatter
 const formatToRupees = (amount: number) => {

@@ -3,9 +3,9 @@ import React, { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Edit, Plus, Trash2 } from 'lucide-react';
-import { TeachingsAPI, Teaching } from '@/api/supabaseUtils';
+import { TeachingsAPI, Teaching } from '@/services/supabase/supabaseUtils';
 import { useQuery } from '@tanstack/react-query';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/common/use-toast';
 import { 
   Sheet, 
   SheetTrigger, 

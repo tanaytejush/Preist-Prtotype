@@ -5,7 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import AdminDashboardStats from '@/components/admin/AdminDashboardStats';
 import AdminLayout from '@/components/admin/AdminLayout';
 import AdminTabs from '@/components/admin/AdminTabs';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/common/use-toast';
 import { Loader2, MapPin } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 

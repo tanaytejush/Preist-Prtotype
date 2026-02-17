@@ -1,6 +1,6 @@
 
 import { useState, useCallback } from 'react';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/common/use-toast';
 import { PriestLocation, TrackingData, LocationUpdate } from '@/types/tracking';
 import { PriestLocationService } from '@/services/priest/priestLocationService';
 import { PriestJourneyService } from '@/services/priest/priestJourneyService';

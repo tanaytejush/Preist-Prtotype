@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, MapPin, Clock, Users } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
-import { EventsAPI, Event } from '@/api/supabaseUtils';
+import { EventsAPI, Event } from '@/services/supabase/supabaseUtils';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 import { Button } from '@/components/ui/button';
 

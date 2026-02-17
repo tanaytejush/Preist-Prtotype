@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { MapPin, Play, Square, Navigation, AlertCircle } from 'lucide-react';
 import { useGeolocation } from '@/hooks/tracking/useGeolocation';
 import { usePriestTracking } from '@/hooks/tracking/usePriestTracking';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/common/use-toast';
 import { PriestBooking } from '@/types/priest';
 
 interface PriestLocationTrackerProps {

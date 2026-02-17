@@ -4,21 +4,21 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { Toaster } from '@/components/ui/toaster';
-import Index from '@/pages/Index';
-import About from '@/pages/About';
-import Services from '@/pages/Services';
-import Events from '@/pages/Events';
-import Teachings from '@/pages/Teachings';
-import Contact from '@/pages/Contact';
-import Donate from '@/pages/Donate';
-import Auth from '@/pages/Auth';
-import Profile from '@/pages/Profile';
-import Admin from '@/pages/Admin';
-import NotFound from '@/pages/NotFound';
-import Priests from '@/pages/Priests';
-import BookPriest from '@/pages/BookPriest';
-import PriestDashboard from '@/pages/PriestDashboard';
-import TrackBooking from '@/pages/TrackBooking';
+import Index from '@/pages/public/Index';
+import About from '@/pages/public/About';
+import Services from '@/pages/public/Services';
+import Events from '@/pages/public/Events';
+import Teachings from '@/pages/public/Teachings';
+import Contact from '@/pages/public/Contact';
+import Donate from '@/pages/public/Donate';
+import Auth from '@/pages/auth/Auth';
+import Profile from '@/pages/user/Profile';
+import Admin from '@/pages/admin/Admin';
+import NotFound from '@/pages/error/NotFound';
+import Priests from '@/pages/priest/Priests';
+import BookPriest from '@/pages/priest/BookPriest';
+import PriestDashboard from '@/pages/priest/PriestDashboard';
+import TrackBooking from '@/pages/priest/TrackBooking';
 
 // Create a single QueryClient instance
 const queryClient = new QueryClient({
