@@ -57,7 +57,11 @@ export default defineConfig({
             },
           },
           {
-            urlPattern: /^https:\/\/lmpslawwsepsitqxmqzq\.supabase\.co\/.*/i,
+            urlPattern: /^https:\/\/lmpslawwsepsitqxmqzq\.supabase\.co\/functions\/.*/i,
+            handler: "NetworkOnly",
+          },
+          {
+            urlPattern: /^https:\/\/lmpslawwsepsitqxmqzq\.supabase\.co\/rest\/.*/i,
             handler: "NetworkFirst",
             options: {
               cacheName: "supabase-api",
